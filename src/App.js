@@ -22,7 +22,11 @@ function App() {
             <Banner />
 
             <div className='app__postContainer'>
-                <Post />
+                {
+                    posts.map(({id, post}) => (
+                        <Post postId={id} post={post}/>
+                    ))
+                }
             </div>
         </div>
     );
