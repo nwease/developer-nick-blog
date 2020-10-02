@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState, useEffect} from 'react';
 import './App.css';
+import Banner from './components/Banner';
+import Post from './components/Post';
+import { db } from './firebase';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+            setPosts(snapshot.docs.map(doc => ({
+                id: doc.id,
+                post: doc.data()
+            })))
+        })
+    }, [])
+
+    return (
+        <div className='app'>
+            <Banner />
+
+            <div className='app__postContainer'>
+                <Post />
+            </div>
+        </div>
+    );
 }
 
 export default App;
